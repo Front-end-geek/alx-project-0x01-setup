@@ -2,7 +2,7 @@ import UserCard from "@/components/common/UserCard";
 import Header from "@/components/layout/Header";
 import { UserProps } from "@/interfaces";
 
-const Users: React.FC<{ posts: UserProps[] }> = ({ posts }) => { // Renamed users to posts
+const Users: React.FC<{ posts: UserProps[] }> = ({ posts }) => { 
   return (
     <div className="flex flex-col h-screen">
       <Header />
@@ -14,7 +14,7 @@ const Users: React.FC<{ posts: UserProps[] }> = ({ posts }) => { // Renamed user
           </button>
         </div>
         <div className="grid grid-cols-3 gap-4">
-          {posts.map((user) => (
+          {posts.map((user) => ( 
             <UserCard key={user.id} {...user} />
           ))}
         </div>
@@ -29,7 +29,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      posts, 
+      posts, // Ensure posts is passed correctly
     },
   };
 }
