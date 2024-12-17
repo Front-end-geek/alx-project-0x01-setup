@@ -20,7 +20,7 @@ export interface PostProps {
 
   export interface CompanyProps {
     name: string;
-    catchprase: string;
+    catchPhrase: string;
     bs: string
   }
 
