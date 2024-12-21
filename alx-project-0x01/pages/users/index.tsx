@@ -11,24 +11,22 @@ const Users: React.FC = () => {
     const completeUser: UserData = {
       ...newUser,
       id: users.length + 1, // Generate unique ID
-      address: {
-        street: newUser.address?.street || "",
-        suite: newUser.address?.suite || "",
-        city: newUser.address?.city || "",
-        zipcode: newUser.address?.zipcode || "",
-        geo: {
-          lat: newUser.address?.geo?.lat || "",
-          lng: newUser.address?.geo?.lng || "",
-        },
-      },
-      company: {
-        name: newUser.company?.name || "",
-        catchPhrase: newUser.company?.catchPhrase || "",
-        bs: newUser.company?.bs || "",
-      },
+      address: newUser.address,
+      company: newUser.company,
     };
 
     setUsers((prevUsers) => [...prevUsers, completeUser]);
   };
 
-  return
+  return (
+    <div>
+      <Header />
+      <button onClick={() => setModalOpen(true)}>Add User</button>
+      {isModalOpen && (
+        <UserModal onClose={() => setModalOpen(false)} onSubmit={handleAddUser} />
+      )}
+    </div>
+  );
+};
+
+export default Users;

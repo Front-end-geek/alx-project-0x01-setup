@@ -1,79 +1,57 @@
-import React, { useState } from "react";
-import { UserModalProps } from "@/interfaces";
+import UserModal from "@/components/common/UserModal";
+import Header from "@/components/layout/Header";
+import { UserProps, UserData } from "@/interfaces";
+import { useState } from "react";
 
-const UserModal: React.FC<UserModalProps> = ({ onClose, onSubmit }) => {
-  const [user, setUser] = useState<Omit<UserProps, "id">>({
-    name: "",
-    username: "",
-    email: "",
-    address: {
-      street: "",
-      suite: "",
-      city: "",
-      zipcode: "",
-      geo: { lat: "", lng: "" },
-    },
-    phone: "",
-    website: "",
-    company: { name: "", catchPhrase: "", bs: "" },
-  });
+const Users: React.FC = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [users, setUsers] = useState<UserData[]>([]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-
-    if (name.startsWith("address.geo.")) {
-      const [_, __, field] = name.split(".");
-      setUser((prevUser) => ({
-        ...prevUser,
-        address: {
-          ...prevUser.address,
-          geo: { ...prevUser.address.geo, [field]: value },
+  const handleAddUser = (newUser: Omit<UserProps, "id">) => {
+    const completeUser: UserData = {
+      ...newUser,
+      id: users.length + 1, // Generate unique ID
+      address: {
+        ...newUser.address,
+        geo: {
+          ...newUser.address.geo,
         },
-      }));
-    } else if (name.startsWith("address.")) {
-      const [_, field] = name.split(".");
-      setUser((prevUser) => ({
-        ...prevUser,
-        address: { ...prevUser.address, [field]: value },
-      }));
-    } else if (name.startsWith("company.")) {
-      const [_, field] = name.split(".");
-      setUser((prevUser) => ({
-        ...prevUser,
-        company: { ...prevUser.company, [field]: value },
-      }));
-    } else {
-      setUser((prevUser) => ({ ...prevUser, [name]: value }));
-    }
-  };
+      },
+      company: {
+        ...newUser.company,
+      },
+    };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(user); // Pass user data back to the parent component
-    onClose(); // Close the modal
+    setUsers((prevUsers) => [...prevUsers, completeUser]);
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white rounded-lg p-8 shadow-lg w-full max-w-lg">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">Add New User</h2>
-        <form onSubmit={handleSubmit}>
-          {/* Add your input fields here */}
-          <button type="submit" className="bg-blue-700 px-4 py-2 text-white rounded-full">
-            Submit
+    <div className="flex flex-col h-screen">
+      <Header />
+      <main className="p-4">
+        <div className="flex justify-between">
+          <h1 className="text-2xl font-semibold">Users</h1>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="bg-blue-700 px-4 py-2 rounded-full text-white"
+          >
+            Add User
           </button>
-        </form>
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 bg-gray-200 rounded-full p-2"
-        >
-          ✕
-        </button>
-      </div>
+        </div>
+        <ul className="mt-4">
+          {users.map((user) => (
+            <li key={user.id} className="border-b p-2">
+              {user.name} - {user.email}
+            </li>
+          ))}
+        </ul>
+      </main>
+
+      {isModalOpen && (
+        <UserModal onClose={() => setModalOpen(false)} onSubmit={handleAddUser} />
+      )}
     </div>
   );
 };
 
-export default UserModal;
+export default Users;
