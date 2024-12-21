@@ -47,3 +47,21 @@ export interface PostProps {
     onSubmit: (post: PostData) => void;
   }
 
+  export interface UserData {
+    id?: number; // Optional because new users don't have an ID yet
+    name: string;
+    username: string;
+    email: string;
+    address: AddressProps;
+     geo: GeoProps;
+    phone: string;
+    website: string;
+    company:CompanyProps
+  }
+  
+  export interface UserModalProps {
+    onClose: () => void;
+    onSubmit: (user: UserData) => void;
+  }
+  
+
